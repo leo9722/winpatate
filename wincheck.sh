@@ -37,7 +37,7 @@ else
 	echo -e "${RED} please select 1 or 2 for scan ${ENDCOLOR}"
 fi
 
-Uncomment if you want to check snmp
+#Uncomment if you want to check snmp
 
 check_snmp=$( cat out_map | grep 161 )
 if [ "$check_snmp" ];then
