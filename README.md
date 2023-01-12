@@ -1,4 +1,6 @@
 # winpatate
+![image](https://user-images.githubusercontent.com/28990351/212079385-9a3d0175-1fbb-4091-aec2-b37a87ea88fc.png)
+
 
 Wincheck.sh est un script bash qui rassemble l'execution de plusieurs commandes d'ennumération au sein d'un actiove directory
 
